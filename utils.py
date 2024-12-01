@@ -2,10 +2,14 @@ import pandas as pd
 import os
 import numpy as np
 import json
+import datetime
 from embeddings import get_tweet_sentiment
 
 def create_price_dict(directory):
     data_dict = {}
+    tweet_start_date = datetime.datetime(2014, 1, 1)
+    tweet_end_date = datetime.datetime(2016, 4, 15)
+
     for filename in os.listdir(directory):
         company_name = filename.split(".")[0]
         company_dict = {}
@@ -15,9 +19,12 @@ def create_price_dict(directory):
         df['pct_change'] = df["Adj Close"].pct_change()
         df.loc[0, "pct_change"] = 0
         for _, row in df.iterrows():
-            company_dict[row["Date"]] = {
-                "price": row["pct_change"]
-            }
+            currDateArr = row["Date"].split("-")
+            currDate = datetime.datetime(currDateArr[0], currDateArr[1], currDateArr[2])
+            if (currDate > tweet_start_date && currDate < tweet_end_date):
+                company_dict[row["Date"]] = {
+                    "price": row["pct_change"]
+                }    
         data_dict[company_name] = company_dict
     return data_dict
 
