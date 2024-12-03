@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import numpy as np
 import json
-from embeddings import get_tweet_sentiment
+#from embeddings import get_tweet_sentiment
 
 def create_price_dict(directory):
     data_dict = {}
@@ -12,13 +12,17 @@ def create_price_dict(directory):
         filepath = os.path.join(directory, filename)
         df = pd.read_csv(filepath)
         df = df.dropna()
-        df['pct_change'] = df["Adj Close"].pct_change()
-        df.loc[0, "pct_change"] = 0
+        # df['pct_change'] = df["Adj Close"].pct_change()
+        # df.loc[0, "pct_change"] = 0
         for _, row in df.iterrows():
             company_dict[row["Date"]] = {
-                "price": row["pct_change"]
+                "adjusted_closing": row["Adj Close"],
+                "high": row["High"],
+                "low": row['Low']
             }
         data_dict[company_name] = company_dict
+    with open("price_dict.json", 'w') as file:
+        json.dump(data_dict, file)
     return data_dict
 
 def create_tweet_dict(tweet_directory):
