@@ -3,10 +3,11 @@ import torch.nn as nn
 class StockLogisticRegressionModel(nn.Module):
     def __init__(self, input_size):
         super(StockLogisticRegressionModel, self).__init__()
-        self.linear = nn.Linear(input_size, 1)
+        self.fc1 = nn.Linear(input_size, 128)
+        self.relu = nn.ReLU()
+        self.fc2 = nn.Linear(128, 1)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
-        logits = self.linear(x)
-        probabilities = self.sigmoid(logits)
-        return probabilities
+        x = self.relu(self.fc1(x))
+        return self.sigmoid(self.fc2(x))
