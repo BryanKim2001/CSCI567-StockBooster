@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import DataLoader
 from model import StockLogisticRegressionModel
 
-def train_model(train_loader, input_size, num_epochs=50, learning_rate=0.8, weight_decay=1e-4, device="cpu"):
+def train_model(train_loader, input_size, num_epochs=20, learning_rate=0.05, weight_decay=1e-4, device="cpu"):
     model = StockLogisticRegressionModel(input_size).to(device)
     criterion = torch.nn.BCELoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
