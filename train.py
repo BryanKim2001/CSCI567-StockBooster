@@ -33,14 +33,14 @@ def train_model(train_loader, input_size, num_epochs = 20, learning_rate=0.05, w
         print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {total_loss:.6f}")
     return model
 
-def train_xgboost_model(train_loader, num_epochs=200, params=None):
+def train_xgboost_model(train_loader, num_epochs=70, params=None):
     # Default XGBoost parameters for regression
     if params is None:
         params = {
             "objective": "binary:logistic",  # Binary classification objective
             "eval_metric": "logloss",       # Log loss for binary classification
-            "max_depth": 6,
-            "learning_rate": 0.05,
+            "max_depth": 8,
+            "learning_rate": 0.01,
             "lambda": 1.0,
             "alpha": 0.0,
             "verbosity": 2 #change back to 1 after debugging
