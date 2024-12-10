@@ -13,11 +13,6 @@ class StockLogisticRegressionModel(nn.Module):
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
-<<<<<<< Updated upstream
-        logits = self.linear(x)
-        probabilities = self.sigmoid(logits)
-        return probabilities
-=======
         x = self.relu(self.fc1(x))
         return self.sigmoid(self.fc2(x))
 
@@ -37,4 +32,3 @@ class StockXGBoostModel:
             self.params = params
         
         self.model = None  # Placeholder for the trained model
->>>>>>> Stashed changes

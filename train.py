@@ -30,10 +30,6 @@ def train_model(train_loader, input_size, num_epochs = 20, learning_rate=0.05, w
 
             total_loss += loss.item()
 
-<<<<<<< Updated upstream
-        print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {total_loss:.4f}")
-    return model
-=======
         print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {total_loss:.6f}")
     return model
 
@@ -56,7 +52,7 @@ def train_xgboost_model(train_loader, num_epochs=200, params=None):
     for batch in train_loader:
         inputs_list.append(batch["input"].cpu().numpy())
         labels_list.append(batch["label"].cpu().numpy())
-        print("hi")
+        #print("hi")
 
     # Convert to NumPy arrays
     X_train = np.vstack(inputs_list)
@@ -81,4 +77,3 @@ def train_xgboost_model(train_loader, num_epochs=200, params=None):
     print("pass")
 
     return model
->>>>>>> Stashed changes
