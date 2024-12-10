@@ -1,10 +1,21 @@
 import torch
 import numpy as np
 from dataset import StockDataset
+<<<<<<< Updated upstream
 from utils import create_data_dict, split_data
 from train import train_model
 from evaluate import evaluate_model
+=======
+from utils import create_price_dict, split_data, create_tweet_dict
+from train import train_model, train_xgboost_model
+from evaluate import evaluate_model, evaluate_xgboost_model
+>>>>>>> Stashed changes
 from torch.utils.data import DataLoader
+import logging
+logging.basicConfig(level=logging.INFO)
+
+import os
+print(os.getcwd())
 
 data_dict = create_data_dict("data/price/raw")
 split_dict = split_data(data_dict, 0.8)
@@ -26,7 +37,15 @@ train_loader = DataLoader(train_dataset, batch_size=100000, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
+<<<<<<< Updated upstream
 input_size = 3
 model = train_model(train_loader,input_size, device=device, weight_decay=1e-4)
 
 evaluate_model(model, test_loader, device=device)
+=======
+input_size = 5
+#model = train_model(train_loader,input_size, device=device, weight_decay=1e-4)
+model = train_xgboost_model(train_loader)
+
+evaluate_xgboost_model(model, test_loader)
+>>>>>>> Stashed changes

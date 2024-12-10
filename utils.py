@@ -4,6 +4,7 @@ import numpy as np
 
 def create_data_dict(directory):
     data_dict = {}
+    print(os.listdir(directory))
     for filename in os.listdir(directory):
         company_name = filename.split(".")[0]
         company_dict = {}
