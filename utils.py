@@ -4,24 +4,23 @@ import numpy as np
 import json
 #from embeddings import get_tweet_sentiment
 
-def create_price_dict(directory):
+def create_data_dict(directory):
     data_dict = {}
+    print(os.listdir(directory))
     for filename in os.listdir(directory):
         company_name = filename.split(".")[0]
         company_dict = {}
         filepath = os.path.join(directory, filename)
         df = pd.read_csv(filepath)
         df = df.dropna()
-        # df['pct_change'] = df["Adj Close"].pct_change()
-        # df.loc[0, "pct_change"] = 0
+        df['pct_change'] = df["Adj Close"].pct_change()
+        df.loc[0, "pct_change"] = 0
         for _, row in df.iterrows():
             company_dict[row["Date"]] = {
-                "adjusted_closing": row["Adj Close"],
-                "high": row["High"],
-                "low": row['Low']
+                "price": row["pct_change"]
             }
         data_dict[company_name] = company_dict
-    with open("price_dict.json", 'w') as file:
+    with open('price_dict.json', 'w') as file:
         json.dump(data_dict, file)
     return data_dict
 
@@ -89,3 +88,5 @@ def split_data(data_dict, split_ratio=0.8):
         test_data[company] = {date: prices[date] for date in test_dates}
 
     return {"train": train_data, "test": test_data}
+
+create_data_dict('data/price/raw')
