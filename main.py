@@ -36,7 +36,7 @@ print(price_std)
 train_dataset = StockDataset(split_dict, split="train", price_mean=float(price_mean), price_std=float(price_std), tweet_dict=tweet_dict)
 test_dataset = StockDataset(split_dict, split="test", price_mean=price_mean, price_std=price_std, tweet_dict=tweet_dict)
 
-train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True)
+train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
 
 device = "cuda" if torch.cuda.is_available() else "cpu"

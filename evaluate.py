@@ -1,6 +1,7 @@
 import torch
 import numpy as np
 import xgboost as xgb
+import math
 
 def evaluate_model(model, test_loader, device="cpu"):
     model.eval()
@@ -51,6 +52,25 @@ def evaluate_xgboost_model(model, test_loader):
     count = len(y_test)
 
     accuracy = correct / count
+
+    true_positive = np.sum((y_pred == 1) & (y_test == 1))
+    true_negative = np.sum((y_pred == 0) & (y_test == 0))
+    false_positive = np.sum((y_pred == 1) & (y_test == 0))
+    false_negative = np.sum((y_pred == 0) & (y_test == 1))
+
+    numerator = (true_positive * true_negative) - (false_positive * false_negative)
+    denominator = math.sqrt(
+        (true_positive + false_positive) * (true_positive + false_negative) *
+        (true_negative + false_positive) * (true_negative + false_negative)
+    )
+    mcc = numerator / denominator if denominator != 0 else 0
+
+    precision = true_positive / (true_positive + false_positive) if (true_positive + false_positive) > 0 else 0
+    recall = true_positive / (true_positive + false_negative) if (true_positive + false_negative) > 0 else 0
+    f1_score = (2 * precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
+
     print(f"Accuracy: {accuracy:.4f}")
+    print(f"MCC Score: {mcc:.4f}")
+    print(f"F1 Score: {f1_score:.4f}")
     return accuracy
 
