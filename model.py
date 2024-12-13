@@ -1,13 +1,23 @@
 import torch.nn as nn
+import xgboost as xgb
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 
-class StockLogisticRegressionModel(nn.Module):
-    def __init__(self, input_size):
-        super(StockLogisticRegressionModel, self).__init__()
-        self.fc1 = nn.Linear(input_size, 128)
-        self.relu = nn.ReLU()
-        self.fc2 = nn.Linear(128, 1)
-        self.sigmoid = nn.Sigmoid()
+class StockXGBoostModel:
+    def __init__(self, input_size, params=None):
 
-    def forward(self, x):
-        x = self.relu(self.fc1(x))
-        return self.sigmoid(self.fc2(x))
+        if params is None:
+            self.params = {
+                'objective': 'binary:logistic',  # For binary classification
+                'eval_metric': 'logloss',      # Evaluation metric
+                'max_depth': 6,               # Depth of trees
+                'learning_rate': 0.1,         # Step size shrinkage
+                'n_estimators': 100,          
+                'use_label_encoder': False  
+            }
+        else:
+            self.params = params
+        
+        self.model = None

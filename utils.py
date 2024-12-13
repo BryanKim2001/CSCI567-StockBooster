@@ -6,6 +6,7 @@ from embeddings import get_tweet_sentiment
 
 def create_price_dict(directory):
     data_dict = {}
+    print(os.listdir(directory))
     for filename in os.listdir(directory):
         company_name = filename.split(".")[0]
         company_dict = {}
@@ -85,3 +86,35 @@ def split_data(data_dict, split_ratio=0.8):
         test_data[company] = {date: prices[date] for date in test_dates}
 
     return {"train": train_data, "test": test_data}
+
+def create_tweet_dict(tweet_directory):
+    tweet_dict = {}
+    for company in os.listdir(tweet_directory):
+        company_path = os.path.join(tweet_directory, company)
+        if (os.path.isdir(company_path)):
+            tweet_dict[company] = {}
+            for tweet_file in os.listdir(company_path):
+                date = os.path.splitext(tweet_file)[0]
+                file_path = os.path.join(company_path, tweet_file)
+
+                with open(file_path, "r") as f:
+                    tweet_set= set()
+                    tweets = f.readlines()
+
+                    if (tweets):
+                        embeddings = []
+                        #tweet_dict[company][date] = list(np.mean(embeddings, axis = 0))
+                        for tweet in tweets:
+                            text = json.loads(tweet)['text']
+                            if (text not in tweet_set):
+                                tweet_set.add(text)
+                                embeddings.append(get_tweet_sentiment(preprocess_tweet(text.split(" "))))
+                        tweet_dict[company][date] = np.mean(embeddings)
+                    else:
+                        tweet_dict[company][date] = 0
+    print(len(tweet_dict.items()))
+    with open('tweet_sentiment_dict.json', 'w') as file:
+        json.dump(tweet_dict, file)
+    return tweet_dict
+    
+

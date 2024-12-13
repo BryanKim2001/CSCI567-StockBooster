@@ -2,7 +2,8 @@ import torch
 from torch.utils.data import Dataset
 
 class StockDataset(Dataset):
-    def __init__(self, data_dict, split, price_mean, price_std, tweet_dict, embedding_dim=768):
+    def __init__(self, data_dict, split, price_mean, price_std, tweet_dict):
+
         self.data = []
         self.price_mean = price_mean
         self.price_std = price_std
@@ -18,11 +19,21 @@ class StockDataset(Dataset):
                     for j in range(i - 3, i)
                 ]
                 tweet_available = 1 if sorted_dates[i] in tweet_dict.get(company, {}) else -1
-                tweet_vector = tweet_dict.get(company, {}).get(               #appends tweet sentiment
+
+                tweet_vector = [
+                    tweet_dict.get(company, {}).get(               #appends tweet sentiment
                     sorted_dates[i], 2
-                )
-                input_vector += [tweet_vector] + [tweet_available]
-                label = 1 if dates[sorted_dates[i]]["price"] >= 0 else 0  # label of input, depending on price increase/decrease
+                    ),
+                    tweet_dict.get(company, {}).get(               #appends tweet sentiment
+                    sorted_dates[i-1], 2
+                    ),
+                    tweet_dict.get(company, {}).get(               #appends tweet sentiment
+                    sorted_dates[i-2], 2
+                    )
+                ]
+                input_vector += tweet_vector
+                label = 1 if dates[sorted_dates[i]]["price"] >= 0 else 0
+
                 self.data.append({"input": input_vector, "label": label})
 
     def __len__(self):
