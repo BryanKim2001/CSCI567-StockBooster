@@ -7,7 +7,6 @@ class StockDataset(Dataset):
         self.data = []
         self.price_mean = price_mean
         self.price_std = price_std
-        self.embedding_dim = embedding_dim
 
         for company, dates in data_dict[split].items():
             sorted_dates = sorted(dates.keys())

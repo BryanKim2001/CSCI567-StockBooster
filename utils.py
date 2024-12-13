@@ -4,7 +4,7 @@ import numpy as np
 import json
 from embeddings import get_tweet_sentiment
 
-def create_price_dict(directory):
+def create_data_dict(directory):
     data_dict = {}
     print(os.listdir(directory))
     for filename in os.listdir(directory):
