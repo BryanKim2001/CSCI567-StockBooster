@@ -1,4 +1,5 @@
 import torch.nn as nn
+import torch
 
 import xgboost as xgb
 import numpy as np
@@ -6,15 +7,43 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
-class StockLogisticRegressionModel(nn.Module):
-    def __init__(self, input_size):
-        super(StockLogisticRegressionModel, self).__init__()
-        self.linear = nn.Linear(input_size, 1)
-        self.sigmoid = nn.Sigmoid()
 
-    def forward(self, x):
-        x = self.relu(self.fc1(x))
-        return self.sigmoid(self.fc2(x))
+class HybridModel:
+    def __init__(self, lstm_model, xgb_model):
+        """
+        Initializes the hybrid model with LSTM and XGBoost components.
+        
+        Args:
+            lstm_model: Trained LSTM model for feature extraction.
+            xgb_model: Trained XGBoost model for prediction.
+        """
+        self.lstm_model = lstm_model
+        self.xgb_model = xgb_model
+
+    def predict(self, inputs):
+        """
+        Makes predictions using the hybrid model.
+        
+        Args:
+            inputs: Torch tensor of inputs to be passed to the LSTM.
+        
+        Returns:
+            numpy array: Predicted outputs (binary or probabilities).
+        """
+        # Ensure LSTM is in evaluation mode
+        self.lstm_model.eval()
+        with torch.no_grad():
+            # Extract features using the LSTM
+            lstm_features = self.lstm_model(inputs).cpu().numpy()
+
+        # Convert to XGBoost DMatrix
+        dmatrix = xgb.DMatrix(lstm_features)
+        # Use the XGBoost model to make predictions
+        y_pred_prob = self.xgb_model.predict(dmatrix)
+
+        return y_pred_prob
+
+
 
 class StockXGBoostModel:
     def __init__(self, input_size, params=None):

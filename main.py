@@ -2,9 +2,13 @@ import torch
 import numpy as np
 from dataset import StockDataset
 from utils import create_data_dict, split_data, create_tweet_dict
-from train import train_model, train_xgboost_model
-from evaluate import evaluate_model, evaluate_xgboost_model
+
+from train import train_hybrid_model
+from evaluate import evaluate_hybrid_model
+from model import HybridModel
+
 from torch.utils.data import DataLoader
+
 import logging
 import json
 logging.basicConfig(level=logging.INFO)
@@ -41,7 +45,12 @@ test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 input_size = 6
-#model = train_model(train_loader,input_size, device=device, weight_decay=1e-4)
-model = train_xgboost_model(train_loader)
 
-evaluate_xgboost_model(model, test_loader)
+
+lstm_model, xgb_model = train_hybrid_model(train_loader)
+
+
+hybrid_model = HybridModel(lstm_model, xgb_model)
+
+accuracy = evaluate_hybrid_model(hybrid_model, test_loader)
+print(accuracy)
