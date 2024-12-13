@@ -18,6 +18,7 @@ def train_xgboost_model(train_loader, num_epochs=68, params=None):
             "verbosity": 2
         }
 
+
     inputs_list = []
     labels_list = []
     for batch in train_loader:
@@ -29,11 +30,11 @@ def train_xgboost_model(train_loader, num_epochs=68, params=None):
 
     dtrain = xgb.DMatrix(X_train, label=y_train)
 
+
     print("X_train shape:", X_train.shape)
     print("y_train shape:", y_train.shape)
     print("Data types:", X_train.dtype, y_train.dtype)
     print("DMatrix created:", dtrain.num_row(), "rows,", dtrain.num_col(), "columns")
-
 
     model = xgb.train(
         params=params,

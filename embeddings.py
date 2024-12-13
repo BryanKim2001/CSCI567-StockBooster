@@ -17,3 +17,4 @@ def get_tweet_sentiment(tweet):
 
     print(predicted_class_id, "\n")
     return predicted_class_id
+

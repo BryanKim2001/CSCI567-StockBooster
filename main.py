@@ -1,9 +1,12 @@
 import torch
 import numpy as np
+import json
 from dataset import StockDataset
+
 from utils import create_data_dict, split_data, create_tweet_dict
 from train import train_xgboost_model
 from evaluate import evaluate_xgboost_model
+
 from torch.utils.data import DataLoader
 import logging
 import json
@@ -44,3 +47,4 @@ input_size = 6
 model = train_xgboost_model(train_loader)
 
 evaluate_xgboost_model(model, test_loader)
+
